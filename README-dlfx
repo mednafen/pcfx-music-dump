@@ -1,0 +1,24 @@
+Der Langrisser FX Music Dumper
+----------------------------------------------
+
+This program decodes ADPCM music from the PC-FX game "Der Langrisser FX" into Microsoft WAVE files.
+
+This program will not work properly on a big-endian platform without changes to the code.
+
+The path to the 2352-byte per sector CD rip bin file must be provided as an argument to the "dlfx" program.  Note
+that this program doesn't do any kind of L-EC evaluation or correction(or even checksum validation), so if the user data in
+a sector that this program reads is corrupt, there will be problems.
+
+Like many other PC-FX games, DLFX's ADPCM music was encoded with a buggy encoder(presumably supplied by NEC/Hudson); an
+entry in the step size table is wrong, and the dynamic range is restricted to 1/2 of what it should be.  This translates
+to the waveforms getting off-center in certain circumstances when decoded with the correct algorithm that the real PC-FX uses.
+
+This decoder matches the behavior of the buggy encoder, so that the sound doesn't acquire DC bias.  If the real PC-FX
+behavior is desired, the constant "EmulateBuggyCodec" in "dlfx.cpp" should be set to false, and recompiled and ran.
+
+
+----------------------------------------------
+NOTE:  An earlier version of this program released years ago used the stock OKI ADPCM algorithm, which is wrong
+as the PC-FX algorithm(including the buggy encoder) is somewhat modified from the OKI one.  This necessitated a high-pass
+filter predictor hack to work around the problems using the wrong algorithm caused; needless to say, this hack is no
+longer used.
